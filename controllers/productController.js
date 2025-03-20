@@ -1,29 +1,26 @@
-const Product = require("../models/productModel");
-const catchAsync = require('./../utils/catchAsync');
+const Product = require('../models/productModel');
+const catchAsync = require('../utils/catchAsync');
 
 exports.createProduct = catchAsync(async (req, res, next) => {
   const product = await Product.create(req.body);
 
   res.status(201).json({
-    status: "success",
+    status: 'success',
     data: {
       product: product,
     },
   });
-
-
 });
 
 exports.getProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       product,
     },
   });
-
 });
 
 exports.updateProduct = catchAsync(async (req, res, next) => {
@@ -33,20 +30,18 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       product,
     },
   });
-
 });
 
 exports.deleteProduct = catchAsync(async (req, res, next) => {
   await Product.findByIdAndDelete(req.params.id);
 
   res.status(204).json({
-    status: "success",
+    status: 'success',
     data: null,
   });
-
-})
+});
