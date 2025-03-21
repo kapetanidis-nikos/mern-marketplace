@@ -8,7 +8,7 @@ router.route('/').post(productController.createProduct);
 
 router
   .route('/:id')
-  .get(authController.protect, productController.getProduct)
+  .get(authController.protect, authController.restrictTo("user"), productController.getProduct)
   .patch(productController.updateProduct)
   .delete(productController.deleteProduct);
 
