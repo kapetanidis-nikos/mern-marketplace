@@ -23,7 +23,8 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-app.use(express.json());
+// Body parser, reading data from body into req.body
+app.use(express.json({ limit: `10kb` }));
 
 // Routes
 app.use('/api/v1/products', productRouter);
