@@ -66,6 +66,13 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+userSchema.pre(/^find/, function (next) {
+  // this points to the current query
+  this.find({ active: { $ne: false } });
+  next();
+});
+
+
 // Instance Methods, they are available to all documents reated from that schema.
 userSchema.methods.correctPassword = async function (
   candidatePassword,
