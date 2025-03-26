@@ -59,6 +59,13 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
 // Instance Methods, they are available to all documents reated from that schema.
 userSchema.methods.correctPassword = async function (
   candidatePassword,
@@ -93,7 +100,7 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
