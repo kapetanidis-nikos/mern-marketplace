@@ -1,5 +1,6 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit')
+const helmet = require('helmet');
 
 const AppError = require('./utils/appError');
 
@@ -10,6 +11,9 @@ const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 // Middlewares
+
+// Set security HTTP headers
+app.use(helmet());
 
 // Limit requests from same API
 const limiter = rateLimit({
