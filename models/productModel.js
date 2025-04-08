@@ -36,7 +36,7 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-// Optional: Middleware to update 'updatedAt' when a document is modified
+// Docomunet Middleware: update 'updatedAt' when a document is modified
 productSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
