@@ -1,5 +1,9 @@
 {
   "devDependencies": {
     "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "lucide-react": "^0.487.0",
+    "motion": "^12.6.3"
   }
 }

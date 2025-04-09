@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import LoginPage from "./pages/LoginPage"
 import RootLayout from "./pages/RootLayout";
 import ErrorPage from "./pages/ErrorPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
 
@@ -14,6 +15,10 @@ function App() {
     {
       path: "/login",
       element: <LoginPage />,
+    },
+    {
+      path: "/signup",
+      element: <SignUpPage />,
     }]
 
 
