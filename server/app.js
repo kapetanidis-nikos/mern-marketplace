@@ -1,4 +1,5 @@
 const express = require('express');
+const { specs, swaggerUi } = require('./swagger');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -35,6 +36,11 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Routes
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "API Documentation"
+}));
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/users', userRouter);
 
