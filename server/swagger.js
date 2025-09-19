@@ -1,5 +1,6 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const { productSwaggerSchema } = require('./models/productModel');
 
 // Swagger configuration
 const options = {
@@ -22,6 +23,7 @@ const options = {
     ],
     components: {
       schemas: {
+        Product: productSwaggerSchema,
         Error: {
           type: 'object',
           properties: {

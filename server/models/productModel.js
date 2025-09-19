@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseToSwagger = require('mongoose-to-swagger');
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -44,4 +45,6 @@ productSchema.pre('save', function (next) {
 
 const Product = mongoose.model('Product', productSchema);
 
-module.exports = Product;
+const productSwaggerSchema = mongooseToSwagger(Product);
+
+module.exports = {Product, productSwaggerSchema};
