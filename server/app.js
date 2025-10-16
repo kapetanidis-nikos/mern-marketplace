@@ -3,6 +3,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 
@@ -13,6 +14,14 @@ const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 // Middlewares
+
+// Enable CORS for all routes
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true, // If you're using cookies/sessions
+  })
+);
 
 // Set security HTTP headers
 app.use(helmet());
