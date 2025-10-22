@@ -1,66 +1,78 @@
-import { cn } from "@/lib";
 import { Button } from "@/components/ui/button";
-
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { toast } from "sonner";
 
-import { Mail } from "lucide-react";
+import CardWrapper from "@/components/general/CardWrapper";
+
 import * as z from "zod";
+import { cn } from "@/lib";
+import { mainApi } from "@/api/api";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { PasswordInput } from "../general/PasswordInput";
-import CardWrapper from "../general/CardWrapper";
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(5, "Bug name must be at least 5 characters.")
-    .max(15, "Bug name must be at most 15 characters."),
   email: z
-    .string()
+    .email()
     .min(8, "Email must be at least 8 characters.")
     .max(30, "Email must be at most 30 characters."),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters.")
+    .max(50, "Password must be at most 50 characters."),
 });
 
 export default function LoginForm({ className, ...props }) {
+  let navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       email: "",
+      password: "",
     },
   });
 
   const formFields = [
     {
-      name: "name",
-      htmlFor: "signup-form-name",
-      label: "Name",
-      placeholder: "John Doe",
-      autoComplete: "off",
-    },
-    {
       name: "email",
       htmlFor: "signup-form-email",
       label: "Email",
-      placeholder: "m@email.com",
+      placeholder: "JohnDoe@outlook.com",
       autoComplete: "off",
-      _type: "email",
+    },
+    {
+      name: "password",
+      htmlFor: "signup-form-password",
+      label: "Password",
+      placeholder: "m@password.com",
+      autoComplete: "off",
+      _type: "password",
       _required: "true",
     },
   ];
 
   const onSubmit = async (data) => {
-    const response = await mainApi.post("/users/login", data);
+    try {
+      const response = await mainApi.post("/users/login", data);
+
+      toast(response.data.data.message.title, {
+        description: response.data.data.message.description,
+      });
+
+      navigate("/home");
+    } catch (error) {
+      toast(error.message, {
+        description: error.message,
+      });
+    }
   };
 
   const content = (
@@ -91,7 +103,7 @@ export default function LoginForm({ className, ...props }) {
         ))}
         <div className="flex flex-col gap-6">
           <Button type="submit" className="w-full">
-            Sign Up
+            Login
           </Button>
         </div>
         <div className="mt-4 text-center text-sm">

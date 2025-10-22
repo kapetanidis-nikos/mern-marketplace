@@ -1,20 +1,22 @@
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Link } from "react-router-dom";
+import { toast } from "sonner";
+
+import CardWrapper from "@/components/general/CardWrapper";
+
 import * as z from "zod";
+import { cn } from "@/lib/utils";
+import { mainApi } from "@/api/api";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import CardWrapper from "../general/CardWrapper";
-import { mainApi } from "@/api/api";
 
 const formSchema = z
   .object({
@@ -23,9 +25,9 @@ const formSchema = z
       .min(5, "Bug name must be at least 5 characters.")
       .max(15, "Bug name must be at most 15 characters."),
     email: z
-      .string()
-      .min(8, "Email must be at least 8 characters.")
-      .max(30, "Email must be at most 30 characters."),
+      .email()
+      .min(1, "Email is required")
+      .max(50, "Email must be at most 50 characters."),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters.")
@@ -40,6 +42,8 @@ const formSchema = z
   });
 
 export default function SignUpForm({ className, ...props }) {
+  let navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -87,7 +91,19 @@ export default function SignUpForm({ className, ...props }) {
   ];
 
   const onSubmit = async (data) => {
-    const response = await mainApi.post("/users/signup", data);
+    try {
+      const response = await mainApi.post("/users/signup", data);
+
+      toast(response.data.data.message.title, {
+        description: response.data.data.message.description,
+      });
+
+      navigate("/login");
+    } catch (error) {
+      toast(error.message, {
+        description: error.message,
+      });
+    }
   };
 
   const content = (

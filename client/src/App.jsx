@@ -1,12 +1,16 @@
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 
-import LoginPage from "./pages/LoginPage"
+import LoginPage from "./pages/LoginPage";
 import RootLayout from "./pages/RootLayout";
 import ErrorPage from "./pages/ErrorPage";
 import SignUpPage from "./pages/SignUpPage";
+import HomePage from "./pages/HomePage";
 
 function App() {
-
   const routesConfig = [
     {
       path: "/",
@@ -19,8 +23,12 @@ function App() {
     {
       path: "/signup",
       element: <SignUpPage />,
-    }]
-
+    },
+    {
+      path: "/home",
+      element: <HomePage />,
+    },
+  ];
 
   const router = createBrowserRouter([
     {
@@ -35,7 +43,6 @@ function App() {
   ]);
 
   return <RouterProvider router={router} />;
-
 }
 
-export default App
+export default App;

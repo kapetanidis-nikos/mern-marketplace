@@ -11,7 +11,7 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, message, statusCode, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
@@ -28,6 +28,7 @@ const createSendToken = (user, statusCode, res) => {
     token,
     data: {
       user,
+      message: message,
     },
   });
 };
@@ -41,7 +42,12 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  createSendToken(newUser, 201, res);
+  const message = {
+    title: 'Welcome to Grocery Deals!',
+    description: 'You are being redirected to the Login page',
+  };
+
+  createSendToken(newUser, message, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -60,7 +66,13 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) If everything ok, send token to client
-  createSendToken(user, 200, res);
+
+  const message = {
+    title: 'Welcome to Back!',
+    description: 'You are being redirected to the Home page',
+  };
+
+  createSendToken(user, message, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
