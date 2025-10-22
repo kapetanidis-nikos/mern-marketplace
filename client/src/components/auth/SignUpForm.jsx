@@ -2,39 +2,132 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Link } from "react-router-dom";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import CardWrapper from "../general/CardWrapper";
+import { mainApi } from "@/api/api";
+
+const formSchema = z
+  .object({
+    name: z
+      .string()
+      .min(5, "Bug name must be at least 5 characters.")
+      .max(15, "Bug name must be at most 15 characters."),
+    email: z
+      .string()
+      .min(8, "Email must be at least 8 characters.")
+      .max(30, "Email must be at most 30 characters."),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters.")
+      .max(50, "Password must be at most 50 characters."),
+    passwordConfirm: z
+      .string()
+      .min(8, "Password must be at least 8 characters."),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Passwords don't match",
+    path: ["passwordConfirm"],
+  });
 
 export default function SignUpForm({ className, ...props }) {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    },
+  });
+
+  const formFields = [
+    {
+      name: "name",
+      htmlFor: "signup-form-name",
+      label: "Name",
+      placeholder: "John Doe",
+      autoComplete: "off",
+    },
+    {
+      name: "email",
+      htmlFor: "signup-form-email",
+      label: "Email",
+      placeholder: "m@email.com",
+      autoComplete: "off",
+      _type: "email",
+      _required: "true",
+    },
+    {
+      name: "password",
+      htmlFor: "signup-form-password",
+      label: "Password",
+      placeholder: "********",
+      autoComplete: "off",
+      _required: "true",
+    },
+    {
+      name: "passwordConfirm",
+      htmlFor: "signup-form-passwordConfirm",
+      label: "Confirm Password",
+      placeholder: "********",
+      autoComplete: "off",
+      _type: "password",
+      _required: "true",
+    },
+  ];
+
+  const onSubmit = async (data) => {
+    const response = await mainApi.post("/users/signup", data);
+  };
+
   const content = (
-    <form>
-      <div className="flex flex-col gap-6">
-        <div className="grid gap-2">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" type="text" placeholder="John Doe" required />
+    <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <FieldGroup>
+        {formFields.map((item) => (
+          <Controller
+            name={item.name}
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <div className="grid gap-2">
+                  <FieldLabel htmlFor={item.htmlFor}>{item.label}</FieldLabel>
+                  <Input
+                    {...field}
+                    id={item.htmlFor}
+                    aria-invalid={fieldState.invalid}
+                    placeholder={item.placeholder}
+                    autoComplete={item.autoComplete}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </div>
+              </Field>
+            )}
+          />
+        ))}
+        <div className="flex flex-col gap-6">
+          <Button type="submit" className="w-full">
+            Sign Up
+          </Button>
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+        <div className="mt-4 text-center text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="underline underline-offset-4">
+            Login
+          </Link>
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" required />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <Input id="confirmPassword" type="password" required />
-        </div>
-        <Button type="submit" className="w-full">
-          Sign Up
-        </Button>
-      </div>
-      <div className="mt-4 text-center text-sm">
-        Already have an account?{" "}
-        <Link to="/login" className="underline underline-offset-4">
-          Login
-        </Link>
-      </div>
+      </FieldGroup>
     </form>
   );
 
