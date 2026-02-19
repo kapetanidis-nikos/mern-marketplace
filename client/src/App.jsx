@@ -1,30 +1,34 @@
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
-import LoginPage from "./pages/LoginPage"
-import RootLayout from "./pages/RootLayout";
-import ErrorPage from "./pages/ErrorPage";
-import SignUpPage from "./pages/SignUpPage";
+import LoginPage from './pages/LoginPage';
+import RootLayout from './pages/RootLayout';
+import ErrorPage from './pages/ErrorPage';
+import SignUpPage from './pages/SignUpPage';
+import EmailVerificationPage from './pages/EmailVerificationPage';
 
 function App() {
-
   const routesConfig = [
     {
-      path: "/",
+      path: '/',
       element: <Navigate to="/login" replace />,
     },
     {
-      path: "/login",
+      path: '/login',
       element: <LoginPage />,
     },
     {
-      path: "/signup",
+      path: '/signup',
       element: <SignUpPage />,
-    }]
-
+    },
+    {
+      path: '/verify-email',
+      element: <EmailVerificationPage />,
+    },
+  ];
 
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: '/',
       element: <RootLayout routesConfig={routesConfig} />,
       errorElement: <ErrorPage routesConfig={routesConfig} />,
       children: routesConfig.map((route) => ({
@@ -35,7 +39,6 @@ function App() {
   ]);
 
   return <RouterProvider router={router} />;
-
 }
 
-export default App
+export default App;

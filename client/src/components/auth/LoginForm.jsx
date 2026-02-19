@@ -10,7 +10,7 @@ export default function LoginForm({ className, ...props }) {
   return (
     <div className={cn('flex flex-col gap-4', className)} {...props}>
       <CardWrapper
-        title={'Login'}
+        title={'Welcome Back'}
         description={'Login in to your Account in order to use our service.'}
         shouldAnimate={true}
       >

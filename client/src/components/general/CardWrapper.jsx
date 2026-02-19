@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export default function CardWrapper({ title, description, shouldAnimate, children }) {
   const content = (
-    <Card className="bg-gray-800/90">
+    <Card className="bg-gray-800/50">
       <CardHeader>
         <CardTitle className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
           {title}
